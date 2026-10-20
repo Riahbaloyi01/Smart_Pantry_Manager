@@ -5,6 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import com.baloyi.smartpantry.model.Recipe;
+import com.baloyi.smartpantry.model.RecipeIngredient;
+import com.baloyi.smartpantry.util.SeedData;
 
 import com.baloyi.smartpantry.model.PantryItem;
 
@@ -48,6 +51,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + "quantity REAL NOT NULL, "
                 + "unit TEXT NOT NULL, "
                 + "FOREIGN KEY(recipe_id) REFERENCES " + TABLE_RECIPES + "(id))");
+
+        SeedData.seed(db);
     }
 
     // Runs when DB_VERSION goes up; simple approach: rebuild the tables
@@ -103,4 +108,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         return db.delete(TABLE_PANTRY, "id = ?", new String[]{String.valueOf(id)});
     }
+
+    // READ: get every recipe together with its ingredients
+    public List<Recipe> getAllRecipes() {
+        List<Recipe> recipes = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor rc = db.query(TABLE_RECIPES, null, null, null, null, null, "name ASC");
+        while (rc.moveToNext()) {
+            long id = rc.getLong(rc.getColumnIndexOrThrow("id"));
+            Recipe recipe = new Recipe(id,
+                    rc.getString(rc.getColumnIndexOrThrow("name")),
+                    rc.getString(rc.getColumnIndexOrThrow("steps")));
+
+            Cursor ic = db.query(TABLE_RECIPE_INGREDIENTS, null, "recipe_id = ?",
+                    new String[]{String.valueOf(id)}, null, null, null);
+            while (ic.moveToNext()) {
+                recipe.addIngredient(new RecipeIngredient(
+                        ic.getString(ic.getColumnIndexOrThrow("name")),
+                        ic.getDouble(ic.getColumnIndexOrThrow("quantity")),
+                        ic.getString(ic.getColumnIndexOrThrow("unit"))));
+            }
+            ic.close();
+            recipes.add(recipe);
+        }
+        rc.close();
+        return recipes;
+    }
+
 }
