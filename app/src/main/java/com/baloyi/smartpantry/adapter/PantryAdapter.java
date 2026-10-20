@@ -51,6 +51,7 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder
         final PantryItem item = items.get(position);
 
         holder.tvName.setText(item.getName());
+        holder.tvInitial.setText(item.getName().substring(0, 1).toUpperCase());
 
         double q = item.getQuantity();
         String qty = (q == Math.floor(q)) ? String.valueOf((long) q) : String.valueOf(q);
@@ -74,11 +75,12 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder
 
     // Holds the views of one row so they are looked up only once
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvName, tvQuantity, tvExpiry;
+        TextView tvInitial, tvName, tvQuantity, tvExpiry;
         ImageButton btnDelete;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
+            tvInitial = itemView.findViewById(R.id.tvInitial);
             tvName = itemView.findViewById(R.id.tvName);
             tvQuantity = itemView.findViewById(R.id.tvQuantity);
             tvExpiry = itemView.findViewById(R.id.tvExpiry);

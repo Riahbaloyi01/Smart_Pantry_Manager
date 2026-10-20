@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,8 +50,13 @@ public class PantryListFragment extends Fragment {
         adapter = new PantryAdapter(new ArrayList<>(), new PantryAdapter.OnItemActionListener() {
             @Override
             public void onEdit(PantryItem item) {
-                // The Add/Edit screen is built in the next step
-                Toast.makeText(requireContext(), "Edit screen coming next", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(requireContext(), AddEditIngredientActivity.class);
+                intent.putExtra(AddEditIngredientActivity.EXTRA_ID, item.getId());
+                intent.putExtra(AddEditIngredientActivity.EXTRA_NAME, item.getName());
+                intent.putExtra(AddEditIngredientActivity.EXTRA_QUANTITY, item.getQuantity());
+                intent.putExtra(AddEditIngredientActivity.EXTRA_UNIT, item.getUnit());
+                intent.putExtra(AddEditIngredientActivity.EXTRA_EXPIRY, item.getExpiryDate());
+                startActivity(intent);
             }
 
             @Override
@@ -62,7 +68,7 @@ public class PantryListFragment extends Fragment {
 
         FloatingActionButton fabAdd = view.findViewById(R.id.fabAdd);
         fabAdd.setOnClickListener(v ->
-                Toast.makeText(requireContext(), "Add screen coming next", Toast.LENGTH_SHORT).show());
+                startActivity(new Intent(requireContext(), AddEditIngredientActivity.class)));
     }
 
     // Reload the list every time the screen comes back into view
