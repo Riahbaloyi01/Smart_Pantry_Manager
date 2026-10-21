@@ -58,13 +58,6 @@ Requirements: Android Studio, minimum SDK 24 (Android 7.0), written entirely in 
 
 The app deals only with the user's own pantry and recipes. It does not use Google Maps, any mapping SDK, or location services.
 
-## Acknowledgements and references
+## Author
 
-I used an AI assistant (Claude, by Anthropic) for guidance while building this project, and I worked through, tested and can explain the code myself. The documentation below was used for the main techniques in the app.
-
-- Android Developers (2026) *Save data using SQLite*. Available at: https://developer.android.com/training/data-storage/sqlite (Accessed: 21 October 2026).
-- Android Developers (2026) *Create dynamic lists with RecyclerView*. Available at: https://developer.android.com/develop/ui/views/layout/recyclerview (Accessed: 21 October 2026).
-- Android Developers (2026) *Intents and intent filters*. Available at: https://developer.android.com/guide/components/intents-filters (Accessed: 21 October 2026).
-- Android Developers (2026) *Save key-value data with SharedPreferences*. Available at: https://developer.android.com/training/data-storage/shared-preferences (Accessed: 21 October 2026).
-- Android Developers (2026) *Fragments*. Available at: https://developer.android.com/guide/fragments (Accessed: 21 October 2026).
-- Android Developers (2026) *Build local unit tests*. Available at: https://developer.android.com/training/testing/local-tests (Accessed: 21 October 2026).
+Nonhlanhla Baloyi
