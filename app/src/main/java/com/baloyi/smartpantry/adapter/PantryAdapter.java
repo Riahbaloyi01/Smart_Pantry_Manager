@@ -8,11 +8,16 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.content.ContextCompat;
 
 import com.baloyi.smartpantry.R;
 import com.baloyi.smartpantry.model.PantryItem;
 
 import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder> {
 
@@ -58,10 +63,24 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder
         holder.tvQuantity.setText(qty + " " + item.getUnit());
 
         String expiry = item.getExpiryDate();
+        int grey = ContextCompat.getColor(holder.itemView.getContext(), android.R.color.darker_gray);
+        int red = ContextCompat.getColor(holder.itemView.getContext(), R.color.danger_red);
+
         if (expiry == null || expiry.isEmpty()) {
             holder.tvExpiry.setText("No expiry date");
+            holder.tvExpiry.setTextColor(grey);
         } else {
-            holder.tvExpiry.setText("Expires: " + expiry);
+            long days = daysUntil(expiry);
+            if (days < 0) {
+                holder.tvExpiry.setText("Expired: " + expiry);
+                holder.tvExpiry.setTextColor(red);
+            } else if (days <= 3) {
+                holder.tvExpiry.setText("Expires soon: " + expiry);
+                holder.tvExpiry.setTextColor(red);
+            } else {
+                holder.tvExpiry.setText("Expires: " + expiry);
+                holder.tvExpiry.setTextColor(grey);
+            }
         }
 
         holder.itemView.setOnClickListener(v -> listener.onEdit(item));
@@ -71,6 +90,18 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    // Days from today until the expiry date (negative = already expired)
+    private long daysUntil(String date) {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+            Date target = format.parse(date);
+            Date today = format.parse(format.format(new Date()));
+            return Math.round((target.getTime() - today.getTime()) / 86400000.0);
+        } catch (ParseException e) {
+            return 999; // unreadable date: treat as not expiring
+        }
     }
 
     // Holds the views of one row so they are looked up only once
