@@ -5,6 +5,8 @@
         <item name="colorOnPrimary">#FFFFFF</item>
         <item name="colorSecondary">@color/orange_accent</item>
         <item name="android:colorBackground">@color/cream</item>
+        <item name="colorSecondaryContainer">@color/green_light</item>
+        <item name="colorOnSecondaryContainer">@color/green_dark</item>
     </style>
 
     <style name="Theme.Smart_Pantry_Manager" parent="Base.Theme.Smart_Pantry_Manager" />

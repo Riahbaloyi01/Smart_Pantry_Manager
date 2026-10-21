@@ -135,4 +135,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return recipes;
     }
 
+    // READ: get one recipe (with its ingredients) by id
+    public Recipe getRecipeById(long id) {
+        SQLiteDatabase db = getReadableDatabase();
+        Recipe recipe = null;
+
+        Cursor rc = db.query(TABLE_RECIPES, null, "id = ?",
+                new String[]{String.valueOf(id)}, null, null, null);
+        if (rc.moveToFirst()) {
+            recipe = new Recipe(id,
+                    rc.getString(rc.getColumnIndexOrThrow("name")),
+                    rc.getString(rc.getColumnIndexOrThrow("steps")));
+
+            Cursor ic = db.query(TABLE_RECIPE_INGREDIENTS, null, "recipe_id = ?",
+                    new String[]{String.valueOf(id)}, null, null, null);
+            while (ic.moveToNext()) {
+                recipe.addIngredient(new RecipeIngredient(
+                        ic.getString(ic.getColumnIndexOrThrow("name")),
+                        ic.getDouble(ic.getColumnIndexOrThrow("quantity")),
+                        ic.getString(ic.getColumnIndexOrThrow("unit"))));
+            }
+            ic.close();
+        }
+        rc.close();
+        return recipe;
+    }
+
 }
