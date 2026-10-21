@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.baloyi.smartpantry.R;
 import com.baloyi.smartpantry.db.DatabaseHelper;
+import com.baloyi.smartpantry.util.AppSettings;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -85,6 +86,13 @@ public class AddEditIngredientActivity extends AppCompatActivity {
             etExpiry.setText(getIntent().getStringExtra(EXTRA_EXPIRY));
         } else {
             tvTitle.setText("Add ingredient");
+            // Pre-select the unit chosen in Settings
+            String defaultUnit = AppSettings.getDefaultUnit(this);
+            for (int i = 0; i < UNITS.length; i++) {
+                if (UNITS[i].equals(defaultUnit)) {
+                    spUnit.setSelection(i);
+                }
+            }
         }
 
         etExpiry.setOnClickListener(v -> showDatePicker());

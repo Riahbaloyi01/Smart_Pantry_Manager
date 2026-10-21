@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat;
 
 import com.baloyi.smartpantry.R;
 import com.baloyi.smartpantry.model.PantryItem;
+import com.baloyi.smartpantry.util.AppSettings;
 
 import java.util.List;
 import java.text.ParseException;
@@ -65,16 +66,17 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder
         String expiry = item.getExpiryDate();
         int grey = ContextCompat.getColor(holder.itemView.getContext(), android.R.color.darker_gray);
         int red = ContextCompat.getColor(holder.itemView.getContext(), R.color.danger_red);
+        boolean alertsOn = AppSettings.isExpiryAlertsOn(holder.itemView.getContext());
 
         if (expiry == null || expiry.isEmpty()) {
             holder.tvExpiry.setText("No expiry date");
             holder.tvExpiry.setTextColor(grey);
         } else {
             long days = daysUntil(expiry);
-            if (days < 0) {
+            if (alertsOn && days < 0) {
                 holder.tvExpiry.setText("Expired: " + expiry);
                 holder.tvExpiry.setTextColor(red);
-            } else if (days <= 3) {
+            } else if (alertsOn && days <= 3) {
                 holder.tvExpiry.setText("Expires soon: " + expiry);
                 holder.tvExpiry.setTextColor(red);
             } else {
